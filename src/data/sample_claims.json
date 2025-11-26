@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "name": "Standard Auto Collision",
+    "description": "Standard auto collision claim - should be approved",
+    "claim_text": "I was in a car accident on November 20, 2025, at the intersection of Main Street and Oak Avenue. Another driver ran a red light and hit my vehicle on the driver's side. The damage is extensive - the door is crushed, the side mirror is broken, and there's significant frame damage. The repair shop estimated the cost at $8,500. My policy number is POL-AUTO-001. I've been a policyholder for 2 years with no prior claims. The police report number is PR-2025-11234. I need to get my car repaired as soon as possible as it's my primary transportation to work."
+  },
+  {
+    "id": 2,
+    "name": "Home Water Damage",
+    "description": "Home insurance claim for water damage - partial coverage",
+    "claim_text": "Policy number POL-HOME-002. On November 15, 2025, a pipe burst in my second-floor bathroom causing significant water damage to the bathroom, hallway, and ceiling of the first floor. The water damaged the hardwood floors, drywall, and some furniture. A plumber came out and fixed the pipe immediately. The restoration company estimates $15,000 for repairs - $8,000 for structural repairs, $4,000 for flooring, and $3,000 for furniture replacement. I've been a policyholder for 18 months. Photos and contractor estimates are available upon request."
+  },
+  {
+    "id": 3,
+    "name": "Health Emergency",
+    "description": "Health insurance claim for emergency care - high value",
+    "claim_text": "I'm submitting a claim under policy POL-HEALTH-003. On November 18, 2025, I experienced severe chest pain and was taken by ambulance to St. Mary's Hospital emergency room. After tests including EKG, blood work, and chest X-rays, I was diagnosed with a heart condition and admitted for 3 days of monitoring and treatment. The total hospital bill is $45,000 - $5,000 for emergency room, $25,000 for hospital stay, $10,000 for procedures, and $5,000 for medications. All care was medically necessary and pre-authorized by the attending physician Dr. James Wilson. I have all itemized bills and medical records."
+  },
+  {
+    "id": 4,
+    "name": "Suspicious Auto Claim",
+    "description": "Auto claim with fraud indicators - should flag for review",
+    "claim_text": "Policy POL-AUTO-004. My car was damaged yesterday, November 25, 2025. I'm not exactly sure what happened but when I came out of the grocery store, there was damage to the rear bumper and trunk. No witnesses, no police report. The damage looks pretty bad. I'm claiming $12,000 for repairs. I just got this policy 2 weeks ago. The repair shop is my cousin's auto body shop and they said they can fix it quickly. I need the money urgently as I have financial difficulties. Can you approve this today? I've submitted two other claims in the past month for similar incidents at different locations."
+  },
+  {
+    "id": 5,
+    "name": "Expired Policy Claim",
+    "description": "Claim on expired policy - should be denied",
+    "claim_text": "I need to file a claim for my car accident that happened on November 22, 2025. My policy number is POL-AUTO-005. I was involved in a collision on Highway 101 where another vehicle merged into my lane and sideswiped my car. There's damage to the passenger side doors and panels. The repair estimate is $6,500. I know my policy expired last year but I thought I had renewed it. Can you still process this claim? I've been a loyal customer for many years."
+  },
+  {
+    "id": 6,
+    "name": "Home Theft Claim",
+    "description": "Home theft claim - straightforward approval",
+    "claim_text": "Policy number POL-HOME-002. On November 19, 2025, my home was burglarized while I was at work. The thieves broke in through the back door and stole electronics, jewelry, and other valuables. I filed a police report immediately (Report #BR-2025-8932). Items stolen include: a laptop ($1,500), TV ($800), jewelry ($3,200), and camera equipment ($2,500). Total claimed amount is $8,000. I have receipts for all items and photos from my home insurance inventory I did last year. The police collected fingerprints and are investigating. My deductible is $500."
+  }
+]
