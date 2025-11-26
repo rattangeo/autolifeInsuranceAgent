@@ -66,7 +66,7 @@ class ClaimsProcessingAgent:
     
     def _create_system_prompt(self) -> str:
         """Create the system prompt that guides agent behavior."""
-        return """You are an expert insurance claims processing agent for Manulife.
+        return """You are an expert insurance claims processing agent for AutoLife Insurance.
 
 Your role is to autonomously analyze insurance claims and make decisions about approval or denial.
 

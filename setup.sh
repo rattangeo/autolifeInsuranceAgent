@@ -1,8 +1,8 @@
 #!/bin/bash
 # Quick setup script for Insurance Claims Agent
 
-echo "🏥 Insurance Claims Processing Agent - Setup"
-echo "==========================================="
+echo "Insurance Claims Processing Agent - Setup"
+echo "========================================="
 echo
 
 # Check if venv exists
@@ -19,7 +19,7 @@ pip install --quiet --upgrade pip
 pip install --quiet -r requirements.txt
 
 echo
-echo "✅ Setup complete!"
+echo "Setup complete!"
 echo
 echo "To run the agent:"
 echo "  source venv/bin/activate"

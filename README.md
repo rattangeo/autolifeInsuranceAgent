@@ -76,7 +76,3 @@ pytest
 - Azure OpenAI - GPT-4 for reasoning
 - Pydantic - data validation
 - Rich - terminal UI
-
-## License
-
-MIT

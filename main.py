@@ -224,7 +224,7 @@ async def main():
         with console.status("[bold green]Initializing agent...[/bold green]", spinner="dots"):
             agent = ClaimsProcessingAgent(policies_path)
         
-        console.print("[green]✓[/green] Agent initialized successfully")
+        console.print("[green]Agent initialized successfully[/green]")
         
         # Route to appropriate mode
         if args.interactive:
