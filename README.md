@@ -60,14 +60,7 @@ src/
   models/         # Data models
   data/           # Policy database and sample claims
   utils/          # Config and logging
-tests/            # Unit tests
 main.py           # CLI interface
-```
-
-## Running tests
-
-```bash
-pytest
 ```
 
 ## Tech stack

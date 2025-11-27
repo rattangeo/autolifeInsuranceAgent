@@ -1,17 +1,17 @@
-"""
-Insurance Claims Processing Agent using Semantic Kernel.
-The agent autonomously decides which tools to use and when to conclude.
-"""
+"""Insurance Claims Processing Agent."""
 
 import json
 from pathlib import Path
 from typing import Optional
+from datetime import datetime
 
 from semantic_kernel import Kernel
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.contents import ChatHistory
 from semantic_kernel.functions import KernelPlugin
+
+from ..models import Claim, ClaimRecommendation, ClaimStatus, ClaimInformation, PolicyCoverageCheck, FraudAssessment
 
 from ..models import Claim
 from ..utils import settings, logger
@@ -196,9 +196,7 @@ Analyze this claim step-by-step using your tools, then provide a final recommend
                 break
         
         if not claim.recommendation:
-            # Fallback if agent didn't provide recommendation
-            logger.warning("Agent did not provide recommendation, creating default")
-            from ..models import ClaimRecommendation, ClaimStatus
+            logger.warning("Agent did not provide recommendation")
             claim.recommendation = ClaimRecommendation(
                 status=ClaimStatus.NEEDS_REVIEW,
                 approved_amount=0.0,
@@ -212,87 +210,65 @@ Analyze this claim step-by-step using your tools, then provide a final recommend
         return claim
     
     def _extract_json_from_text(self, text: str, start_keyword: str) -> dict | None:
-        """Extract JSON object from text starting with a keyword."""
+        """Extract JSON object from text."""
         import json
-        import re
         
-        # Find all potential JSON objects
         idx = text.find(start_keyword)
         if idx == -1:
             return None
         
-        # Find opening brace before or after keyword
-        brace_idx = text.rfind('{', 0, idx + len(start_keyword) + 50)
+        brace_idx = text.rfind('{', max(0, idx - 100), idx + 100)
         if brace_idx == -1:
             return None
         
-        # Count braces to find matching closing brace
-        depth = 0
-        in_string = False
-        escape_next = False
+        depth, in_string, escape = 0, False, False
         
         for i in range(brace_idx, len(text)):
             char = text[i]
             
-            if escape_next:
-                escape_next = False
+            if escape:
+                escape = False
                 continue
-            
             if char == '\\':
-                escape_next = True
+                escape = True
                 continue
-            
-            if char == '"' and not escape_next:
+            if char == '"':
                 in_string = not in_string
                 continue
-            
             if not in_string:
                 if char == '{':
                     depth += 1
                 elif char == '}':
                     depth -= 1
                     if depth == 0:
-                        # Found complete JSON
                         try:
                             return json.loads(text[brace_idx:i+1])
                         except:
                             return None
-        
         return None
     
     def _extract_tool_results(self, chat_history: ChatHistory, claim: Claim) -> None:
-        """Extract tool results from chat history and populate claim fields."""
-        from ..models import ClaimInformation, PolicyCoverageCheck, FraudAssessment
-        from datetime import datetime
-        import json
+        """Extract tool results from chat history."""
         
-        # Look through chat history for function results
-        # Tool results are stored in message.items as FunctionResultContent
-        for message in chat_history.messages:
-            if not hasattr(message, 'items') or not message.items:
+        for msg in chat_history.messages:
+            if not hasattr(msg, 'items') or not msg.items:
                 continue
             
-            for item in message.items:
-                # Check if this is a function result
+            for item in msg.items:
                 if not hasattr(item, 'function_name'):
                     continue
                 
-                function_name = getattr(item, 'function_name', '')
-                
-                # Get the result value
-                result_value = None
-                if hasattr(item, 'result'):
-                    result_value = str(item.result)
-                elif hasattr(item, 'inner_content') and hasattr(item.inner_content, 'value'):
-                    result_value = str(item.inner_content.value)
+                result_value = str(item.result) if hasattr(item, 'result') else (
+                    str(item.inner_content.value) if hasattr(item, 'inner_content') and hasattr(item.inner_content, 'value') else None
+                )
                 
                 if not result_value:
                     continue
                 
-                # Extract claim information from extract_claim_information result
-                if function_name == 'extract_claim_information' and not claim.information:
-                    try:
-                        data = json.loads(result_value)
+                try:
+                    data = json.loads(result_value)
+                    
+                    if item.function_name == 'extract_claim_information' and not claim.information:
                         claim.information = ClaimInformation(
                             policy_number=data.get('policy_number', 'UNKNOWN'),
                             claim_type=data.get('claim_type', 'auto'),
@@ -301,41 +277,31 @@ Analyze this claim step-by-step using your tools, then provide a final recommend
                             description=data.get('description', ''),
                             claimant_name=data.get('claimant_name')
                         )
-                        logger.info(f"✓ Extracted claim info: {claim.information.policy_number}, {claim.information.claim_type.value}, ${claim.information.claim_amount:,.2f}")
-                    except Exception as e:
-                        logger.warning(f"Could not parse claim information: {e}")
-                
-                # Extract coverage check from check_policy_coverage result
-                if function_name == 'check_policy_coverage' and not claim.coverage_check:
-                    try:
-                        data = json.loads(result_value)
+                        logger.info(f"✓ Extracted claim info: {claim.information.policy_number}, ${claim.information.claim_amount:,.2f}")
+                    
+                    elif item.function_name == 'check_policy_coverage' and not claim.coverage_check:
                         claim.coverage_check = PolicyCoverageCheck(
-                            is_valid=data.get('is_valid', False),
+                            is_valid=data['is_valid'],
                             coverage_type=data.get('coverage_type', 'unknown'),
-                            coverage_limit=float(data.get('coverage_limit', 0)),
+                            coverage_limit=float(data['coverage_limit']),
                             deductible=float(data.get('deductible', 0)),
-                            is_covered=data.get('is_covered', False),
-                            reason=data.get('reason', ''),
+                            is_covered=data['is_covered'],
+                            reason=data['reason'],
                             policy_expiry=datetime.fromisoformat(data['policy_expiry']) if 'policy_expiry' in data else None
                         )
-                        logger.info(f"✓ Extracted coverage: valid={claim.coverage_check.is_valid}, limit=${claim.coverage_check.coverage_limit:,.2f}")
-                    except Exception as e:
-                        logger.warning(f"Could not parse coverage check: {e}")
-                
-                # Extract fraud assessment from assess_fraud_risk result
-                if function_name == 'assess_fraud_risk' and not claim.fraud_assessment:
-                    try:
-                        data = json.loads(result_value)
+                        logger.info(f"✓ Extracted coverage: valid={data['is_valid']}, limit=${data['coverage_limit']:,.2f}")
+                    
+                    elif item.function_name == 'assess_fraud_risk' and not claim.fraud_assessment:
                         claim.fraud_assessment = FraudAssessment(
-                            risk_level=data.get('risk_level', 'low'),
-                            risk_score=float(data.get('risk_score', 0)),
+                            risk_level=data['risk_level'],
+                            risk_score=float(data['risk_score']),
                             indicators=data.get('indicators', []),
-                            recommendation=data.get('recommendation', ''),
-                            requires_investigation=data.get('requires_investigation', False)
+                            recommendation=data['recommendation'],
+                            requires_investigation=data['requires_investigation']
                         )
-                        logger.info(f"✓ Extracted fraud assessment: {claim.fraud_assessment.risk_level.value}, score={claim.fraud_assessment.risk_score}")
-                    except Exception as e:
-                        logger.warning(f"Could not parse fraud assessment: {e}")
+                        logger.info(f"✓ Extracted fraud assessment: {data['risk_level']}, score={data['risk_score']}")
+                except Exception as e:
+                    logger.warning(f"Could not parse {item.function_name}: {e}")
     
     def _has_final_decision(self, content: str) -> bool:
         """Check if the agent message contains a final decision."""
@@ -352,9 +318,8 @@ Analyze this claim step-by-step using your tools, then provide a final recommend
         content_lower = content.lower()
         return any(keyword in content_lower for keyword in decision_keywords)
     
-    def _parse_recommendation(self, content: str) -> Optional['ClaimRecommendation']:
+    def _parse_recommendation(self, content: str) -> Optional[ClaimRecommendation]:
         """Parse recommendation from agent's response."""
-        from ..models import ClaimRecommendation, ClaimStatus
         import re
         
         content_lower = content.lower()
