@@ -170,6 +170,9 @@ Analyze this claim step-by-step using your tools, then provide a final recommend
                 
                 logger.info(f"Agent response: {content[:150]}...")
                 
+                # Extract and store tool results in claim object
+                self._extract_tool_results(chat_history, claim)
+                
                 # Check if agent has made a final decision
                 if self._has_final_decision(content):
                     logger.info("Agent has reached a decision")
@@ -207,6 +210,132 @@ Analyze this claim step-by-step using your tools, then provide a final recommend
         
         logger.info("Claim processing complete")
         return claim
+    
+    def _extract_json_from_text(self, text: str, start_keyword: str) -> dict | None:
+        """Extract JSON object from text starting with a keyword."""
+        import json
+        import re
+        
+        # Find all potential JSON objects
+        idx = text.find(start_keyword)
+        if idx == -1:
+            return None
+        
+        # Find opening brace before or after keyword
+        brace_idx = text.rfind('{', 0, idx + len(start_keyword) + 50)
+        if brace_idx == -1:
+            return None
+        
+        # Count braces to find matching closing brace
+        depth = 0
+        in_string = False
+        escape_next = False
+        
+        for i in range(brace_idx, len(text)):
+            char = text[i]
+            
+            if escape_next:
+                escape_next = False
+                continue
+            
+            if char == '\\':
+                escape_next = True
+                continue
+            
+            if char == '"' and not escape_next:
+                in_string = not in_string
+                continue
+            
+            if not in_string:
+                if char == '{':
+                    depth += 1
+                elif char == '}':
+                    depth -= 1
+                    if depth == 0:
+                        # Found complete JSON
+                        try:
+                            return json.loads(text[brace_idx:i+1])
+                        except:
+                            return None
+        
+        return None
+    
+    def _extract_tool_results(self, chat_history: ChatHistory, claim: Claim) -> None:
+        """Extract tool results from chat history and populate claim fields."""
+        from ..models import ClaimInformation, PolicyCoverageCheck, FraudAssessment
+        from datetime import datetime
+        import json
+        
+        # Look through chat history for function results
+        # Tool results are stored in message.items as FunctionResultContent
+        for message in chat_history.messages:
+            if not hasattr(message, 'items') or not message.items:
+                continue
+            
+            for item in message.items:
+                # Check if this is a function result
+                if not hasattr(item, 'function_name'):
+                    continue
+                
+                function_name = getattr(item, 'function_name', '')
+                
+                # Get the result value
+                result_value = None
+                if hasattr(item, 'result'):
+                    result_value = str(item.result)
+                elif hasattr(item, 'inner_content') and hasattr(item.inner_content, 'value'):
+                    result_value = str(item.inner_content.value)
+                
+                if not result_value:
+                    continue
+                
+                # Extract claim information from extract_claim_information result
+                if function_name == 'extract_claim_information' and not claim.information:
+                    try:
+                        data = json.loads(result_value)
+                        claim.information = ClaimInformation(
+                            policy_number=data.get('policy_number', 'UNKNOWN'),
+                            claim_type=data.get('claim_type', 'auto'),
+                            incident_date=datetime.fromisoformat(data['incident_date']) if 'incident_date' in data else datetime.now(),
+                            claim_amount=float(data.get('claim_amount', 0)),
+                            description=data.get('description', ''),
+                            claimant_name=data.get('claimant_name')
+                        )
+                        logger.info(f"✓ Extracted claim info: {claim.information.policy_number}, {claim.information.claim_type.value}, ${claim.information.claim_amount:,.2f}")
+                    except Exception as e:
+                        logger.warning(f"Could not parse claim information: {e}")
+                
+                # Extract coverage check from check_policy_coverage result
+                if function_name == 'check_policy_coverage' and not claim.coverage_check:
+                    try:
+                        data = json.loads(result_value)
+                        claim.coverage_check = PolicyCoverageCheck(
+                            is_valid=data.get('is_valid', False),
+                            coverage_type=data.get('coverage_type', 'unknown'),
+                            coverage_limit=float(data.get('coverage_limit', 0)),
+                            deductible=float(data.get('deductible', 0)),
+                            is_covered=data.get('is_covered', False),
+                            reason=data.get('reason', ''),
+                            policy_expiry=datetime.fromisoformat(data['policy_expiry']) if 'policy_expiry' in data else None
+                        )
+                        logger.info(f"✓ Extracted coverage: valid={claim.coverage_check.is_valid}, limit=${claim.coverage_check.coverage_limit:,.2f}")
+                    except Exception as e:
+                        logger.warning(f"Could not parse coverage check: {e}")
+                
+                # Extract fraud assessment from assess_fraud_risk result
+                if function_name == 'assess_fraud_risk' and not claim.fraud_assessment:
+                    try:
+                        data = json.loads(result_value)
+                        claim.fraud_assessment = FraudAssessment(
+                            risk_level=data.get('risk_level', 'low'),
+                            risk_score=float(data.get('risk_score', 0)),
+                            indicators=data.get('indicators', []),
+                            recommendation=data.get('recommendation', ''),
+                            requires_investigation=data.get('requires_investigation', False)
+                        )
+                        logger.info(f"✓ Extracted fraud assessment: {claim.fraud_assessment.risk_level.value}, score={claim.fraud_assessment.risk_score}")
+                    except Exception as e:
+                        logger.warning(f"Could not parse fraud assessment: {e}")
     
     def _has_final_decision(self, content: str) -> bool:
         """Check if the agent message contains a final decision."""
