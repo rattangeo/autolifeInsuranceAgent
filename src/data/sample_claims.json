@@ -1,74 +1,110 @@
 [
   {
     "id": 1,
-    "name": "Standard Auto Collision",
+    "title": "Standard Auto Collision",
     "description": "Standard auto collision claim - should be approved",
+    "policy_number": "POL-AUTO-001",
+    "claim_type": "auto",
+    "amount": 8500,
     "claim_text": "I was in a car accident on November 20, 2025, at the intersection of Main Street and Oak Avenue. Another driver ran a red light and hit my vehicle on the driver's side. The damage is extensive - the door is crushed, the side mirror is broken, and there's significant frame damage. The repair shop estimated the cost at $8,500. My policy number is POL-AUTO-001. I've been a policyholder for 2 years with no prior claims. The police report number is PR-2025-11234. I need to get my car repaired as soon as possible as it's my primary transportation to work."
   },
   {
     "id": 2,
-    "name": "Home Water Damage",
+    "title": "Home Water Damage",
     "description": "Home insurance claim for water damage - partial coverage",
+    "policy_number": "POL-HOME-002",
+    "claim_type": "home",
+    "amount": 15000,
     "claim_text": "Policy number POL-HOME-002. On November 15, 2025, a pipe burst in my second-floor bathroom causing significant water damage to the bathroom, hallway, and ceiling of the first floor. The water damaged the hardwood floors, drywall, and some furniture. A plumber came out and fixed the pipe immediately. The restoration company estimates $15,000 for repairs - $8,000 for structural repairs, $4,000 for flooring, and $3,000 for furniture replacement. I've been a policyholder for 18 months. Photos and contractor estimates are available upon request."
   },
   {
     "id": 3,
-    "name": "Health Emergency",
+    "title": "Health Emergency",
     "description": "Health insurance claim for emergency care - high value",
+    "policy_number": "POL-HEALTH-003",
+    "claim_type": "health",
+    "amount": 45000,
     "claim_text": "I'm submitting a claim under policy POL-HEALTH-003. On November 18, 2025, I experienced severe chest pain and was taken by ambulance to St. Mary's Hospital emergency room. After tests including EKG, blood work, and chest X-rays, I was diagnosed with a heart condition and admitted for 3 days of monitoring and treatment. The total hospital bill is $45,000 - $5,000 for emergency room, $25,000 for hospital stay, $10,000 for procedures, and $5,000 for medications. All care was medically necessary and pre-authorized by the attending physician Dr. James Wilson. I have all itemized bills and medical records."
   },
   {
     "id": 4,
-    "name": "Suspicious Auto Claim",
+    "title": "Suspicious Auto Claim",
     "description": "Auto claim with fraud indicators - should flag for review",
+    "policy_number": "POL-AUTO-004",
+    "claim_type": "auto",
+    "amount": 12000,
     "claim_text": "Policy POL-AUTO-004. My car was damaged yesterday, November 25, 2025. I'm not exactly sure what happened but when I came out of the grocery store, there was damage to the rear bumper and trunk. No witnesses, no police report. The damage looks pretty bad. I'm claiming $12,000 for repairs. I just got this policy 2 weeks ago. The repair shop is my cousin's auto body shop and they said they can fix it quickly. I need the money urgently as I have financial difficulties. Can you approve this today? I've submitted two other claims in the past month for similar incidents at different locations."
   },
   {
     "id": 5,
-    "name": "Expired Policy Claim",
+    "title": "Expired Policy Claim",
     "description": "Claim on expired policy - should be denied",
+    "policy_number": "POL-AUTO-005",
+    "claim_type": "auto",
+    "amount": 6500,
     "claim_text": "I need to file a claim for my car accident that happened on November 22, 2025. My policy number is POL-AUTO-005. I was involved in a collision on Highway 101 where another vehicle merged into my lane and sideswiped my car. There's damage to the passenger side doors and panels. The repair estimate is $6,500. I know my policy expired last year but I thought I had renewed it. Can you still process this claim? I've been a loyal customer for many years."
   },
   {
     "id": 6,
-    "name": "Home Theft Claim",
+    "title": "Home Theft Claim",
     "description": "Home theft claim - straightforward approval",
+    "policy_number": "POL-HOME-002",
+    "claim_type": "home",
+    "amount": 8000,
     "claim_text": "Policy number POL-HOME-002. On November 19, 2025, my home was burglarized while I was at work. The thieves broke in through the back door and stole electronics, jewelry, and other valuables. I filed a police report immediately (Report #BR-2025-8932). Items stolen include: a laptop ($1,500), TV ($800), jewelry ($3,200), and camera equipment ($2,500). Total claimed amount is $8,000. I have receipts for all items and photos from my home insurance inventory I did last year. The police collected fingerprints and are investigating. My deductible is $500."
   },
   {
     "id": 7,
-    "name": "Minor Auto Damage",
+    "title": "Minor Auto Damage",
     "description": "Small claim within limits - quick approval",
+    "policy_number": "POL-AUTO-001",
+    "claim_type": "auto",
+    "amount": 1800,
     "claim_text": "Hi, I'm filing a claim for a minor fender bender. Policy POL-AUTO-001. On November 21st I backed into a pole in a parking garage and dented my rear bumper. Just cosmetic damage, no mechanical issues. Got a quote from the body shop for $1,800 to replace and repaint the bumper. I have photos of the damage. This is my first claim ever and I've had this policy for over 3 years."
   },
   {
     "id": 8,
-    "name": "Health Preventive Care",
+    "title": "Health Preventive Care",
     "description": "Routine checkup claim - low amount",
+    "policy_number": "POL-HEALTH-003",
+    "claim_type": "health",
+    "amount": 450,
     "claim_text": "Submitting claim for annual physical exam. Policy POL-HEALTH-003. I had my yearly checkup on November 10, 2025 with Dr. Sarah Chen. Standard blood work, vitals check, health screening. Total cost was $450. All preventive care covered under my plan. I have the itemized bill and insurance codes from the doctor's office."
   },
   {
     "id": 9,
-    "name": "Windshield Replacement",
+    "title": "Windshield Replacement",
     "description": "Comprehensive coverage claim",
+    "policy_number": "POL-AUTO-001",
+    "claim_type": "auto",
+    "amount": 425,
     "claim_text": "Need to file for windshield replacement. My policy is POL-AUTO-001. A rock hit my windshield while driving on the highway November 23rd and created a large crack. It's not safe to drive. Safelite quoted $425 for replacement. This should be covered under comprehensive, right? No accident involved, just road debris."
   },
   {
     "id": 10,
-    "name": "Home Fire Damage",
+    "title": "Home Fire Damage",
     "description": "Major home claim - high severity",
+    "policy_number": "POL-HOME-002",
+    "claim_type": "home",
+    "amount": 45000,
     "claim_text": "Policy POL-HOME-002. There was a kitchen fire on November 12, 2025. Started from the stove while cooking. Fire department responded quickly (Fire Report #FD-2025-556). Damage to kitchen cabinets, appliances, walls, and smoke damage throughout the house. Contractor estimates $45,000 for repairs and replacement. We've had to move out temporarily. Been policyholders for 2 years, never had a claim before. Have all documentation from fire department and contractor."
   },
   {
     "id": 11,
-    "name": "Suspicious Health Claim",
+    "title": "Suspicious Health Claim",
     "description": "Potential fraud - duplicate billing",
+    "policy_number": "POL-HEALTH-003",
+    "claim_type": "health",
+    "amount": 8500,
     "claim_text": "I need reimbursement for medical expenses. Policy POL-HEALTH-003. I went to urgent care on November 24, 2025 for back pain. They did X-rays and gave me medication. The bill is $8,500 which seems high for urgent care but that's what they charged. I already submitted a similar claim last week for the same issue but I think that one didn't go through. Can you expedite payment? I need the money by tomorrow."
   },
   {
     "id": 12,
-    "name": "Auto Hit and Run",
+    "title": "Auto Hit and Run",
     "description": "Valid claim with police report",
+    "policy_number": "POL-AUTO-004",
+    "claim_type": "auto",
+    "amount": 7200,
     "claim_text": "Filing claim for hit and run damage. Policy number POL-AUTO-004. On November 20, 2025 around 2am, someone hit my parked car on Elm Street and drove off. Woke up to find the front end smashed. Filed police report immediately (PR-2025-11445). Neighbor's security camera caught some footage. Repair estimate is $7,200 for front bumper, hood, and headlight assembly. Been with AutoLife for 6 months, first claim."
   }
 ]

@@ -73,13 +73,20 @@ class ClaimsTools:
         policy_match = re.search(r'POL-[A-Z]+-\d+', claim_text, re.IGNORECASE)
         policy_number = policy_match.group(0) if policy_match else "UNKNOWN"
         
-        # Determine claim type from policy prefix or content
-        if 'POL-AUTO' in policy_number.upper() or any(word in claim_text.lower() for word in ['car', 'vehicle', 'accident', 'collision', 'auto']):
+        # Determine claim type - prioritize policy number prefix first
+        if 'POL-AUTO' in policy_number.upper():
             claim_type = ClaimType.AUTO
-        elif 'POL-HOME' in policy_number.upper() or any(word in claim_text.lower() for word in ['home', 'house', 'property', 'pipe', 'theft', 'burglary']):
+        elif 'POL-HOME' in policy_number.upper():
             claim_type = ClaimType.HOME
-        elif 'POL-HEALTH' in policy_number.upper() or any(word in claim_text.lower() for word in ['hospital', 'medical', 'health', 'emergency', 'doctor']):
+        elif 'POL-HEALTH' in policy_number.upper():
             claim_type = ClaimType.HEALTH
+        # If policy number doesn't indicate type, check content keywords
+        elif any(word in claim_text.lower() for word in ['hospital', 'medical', 'health', 'emergency', 'doctor', 'chest pain', 'heart', 'ekg', 'ambulance', 'patient', 'diagnosis']):
+            claim_type = ClaimType.HEALTH
+        elif any(word in claim_text.lower() for word in ['home', 'house', 'property', 'pipe', 'theft', 'burglary', 'fire', 'water damage']):
+            claim_type = ClaimType.HOME
+        elif any(word in claim_text.lower() for word in ['car', 'vehicle', 'collision', 'auto', 'driving', 'windshield', 'fender']):
+            claim_type = ClaimType.AUTO
         else:
             claim_type = ClaimType.AUTO  # default
         

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Claims Processing Agent</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Insurance Claims Processing Agent Demo</h1>
+                <p class="subtitle">Autonomous AI-Driven Claims Analysis</p>
+                <p class="powered-by">Powered by Azure OpenAI & Semantic Kernel</p>
+                <p class="created-by">Created by - Rattan Ashat</p>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Left Panel: Claims List -->
+            <div class="left-panel">
+                <h2>Sample Claims</h2>
+                <div id="claims-list" class="claims-list">
+                    <p class="loading">Loading claims...</p>
+                </div>
+            </div>
+
+            <!-- Right Panel: Details & Results -->
+            <div class="right-panel">
+                <!-- Claim Details Section -->
+                <div id="claim-details" class="section" style="display: none;">
+                    <h2>Claim Details</h2>
+                    <div id="claim-info" class="info-box"></div>
+                    
+                    <h3>Associated Policy</h3>
+                    <div id="policy-info" class="info-box"></div>
+                    
+                    <button id="process-btn" class="btn-primary">Process This Claim</button>
+                </div>
+
+                <!-- Processing Status -->
+                <div id="processing" class="section" style="display: none;">
+                    <div class="processing-animation">
+                        <div class="spinner"></div>
+                        <p>Agent is analyzing the claim...</p>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results" class="section" style="display: none;">
+                    <h2>Processing Results</h2>
+                    
+                    <div class="result-card">
+                        <h3>Claim Summary</h3>
+                        <div id="result-summary" class="info-box"></div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Decision</h3>
+                        <div id="result-decision" class="info-box"></div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Reasoning</h3>
+                        <div id="result-reasoning" class="reasoning-box"></div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Next Steps</h3>
+                        <div id="result-next-steps"></div>
+                    </div>
+
+                    <div class="result-card">
+                        <h3>Processing Log</h3>
+                        <div id="result-log" class="log-box"></div>
+                    </div>
+
+                    <button id="process-another-btn" class="btn-secondary">← Process Another Claim</button>
+                </div>
+
+                <!-- Initial State -->
+                <div id="initial-state" class="section">
+                    <div class="welcome-message">
+                        <h2>Welcome to Claims Processing</h2>
+                        <p>Select a claim from the list on the left to begin processing.</p>
+                        <p>The AI agent will analyze the claim, check policy coverage, assess fraud risk, and make a recommendation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

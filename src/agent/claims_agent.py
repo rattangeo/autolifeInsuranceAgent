@@ -58,7 +58,7 @@ class ClaimsProcessingAgent:
         self.execution_settings = OpenAIChatPromptExecutionSettings(
             service_id=chat_service_id,
             temperature=settings.agent_temperature,
-            max_tokens=2000
+            max_tokens=32768
         )
         self.execution_settings.function_choice_behavior = FunctionChoiceBehavior.Auto()
         
@@ -353,8 +353,8 @@ Analyze this claim step-by-step using your tools, then provide a final recommend
         if confidence_match:
             confidence = float(confidence_match.group(1)) / 100
         
-        # Reasoning is the content itself (truncated)
-        reasoning = content[:500] if len(content) > 500 else content
+        # Reasoning is the full content (no truncation)
+        reasoning = content
         
         # Generate next steps based on status
         if status == ClaimStatus.APPROVED:
